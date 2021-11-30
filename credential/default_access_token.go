@@ -16,7 +16,7 @@ const (
 	// AccessTokenURL 企业微信获取access_token的接口
 	workAccessTokenURL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s"
 	// CacheKeyOfficialAccountPrefix 微信公众号cache key前缀
-	CacheKeyOfficialAccountPrefix = "gowechat_officialaccount_"
+	CacheKeyOfficialAccountPrefix = "wechatpy"
 	// CacheKeyMiniProgramPrefix 小程序cache key前缀
 	CacheKeyMiniProgramPrefix = "gowechat_miniprogram_"
 	// CacheKeyWorkPrefix 企业微信cache key前缀
