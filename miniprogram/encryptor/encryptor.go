@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/silenceper/wechat/v2/miniprogram/context"
+	"github.com/Kee1997/wechat/v2/miniprogram/context"
 )
 
 // Encryptor struct
