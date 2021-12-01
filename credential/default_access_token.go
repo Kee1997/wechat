@@ -16,7 +16,7 @@ const (
 	// AccessTokenURL 企业微信获取access_token的接口
 	workAccessTokenURL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s"
 	// CacheKeyOfficialAccountPrefix 微信公众号cache key前缀
-	CacheKeyOfficialAccountPrefix = "wechatpy"
+	CacheKeyOfficialAccountPrefix = "gowechat_officialaccount_"
 	// CacheKeyMiniProgramPrefix 小程序cache key前缀
 	CacheKeyMiniProgramPrefix = "gowechat_miniprogram_"
 	// CacheKeyWorkPrefix 企业微信cache key前缀
@@ -57,7 +57,7 @@ type ResAccessToken struct {
 // GetAccessToken 获取access_token,先从cache中获取，没有则从服务端获取
 func (ak *DefaultAccessToken) GetAccessToken() (accessToken string, err error) {
 	// 先从cache中取
-	accessTokenCacheKey := fmt.Sprintf("%s_access_token_%s", ak.cacheKeyPrefix, ak.appID)
+	accessTokenCacheKey := fmt.Sprintf("%s_access_token", ak.appID)
 	if val := ak.cache.Get(accessTokenCacheKey); val != nil {
 		return val.(string), nil
 	}

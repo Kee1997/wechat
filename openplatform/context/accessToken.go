@@ -32,7 +32,7 @@ type ComponentAccessToken struct {
 
 // GetComponentAccessToken 获取 ComponentAccessToken
 func (ctx *Context) GetComponentAccessToken() (string, error) {
-	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
+	accessTokenCacheKey := "component_access_token"
 	val := ctx.Cache.Get(accessTokenCacheKey)
 	if val == nil {
 		return "", fmt.Errorf("cann't get component access token")
@@ -57,7 +57,7 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 		return nil, err
 	}
 
-	accessTokenCacheKey := fmt.Sprintf("component_access_token_%s", ctx.AppID)
+	accessTokenCacheKey := "component_access_token"
 	expires := at.ExpiresIn - 1500
 	if err := ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second); err != nil {
 		return nil, nil
@@ -187,7 +187,7 @@ func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessT
 		return nil, err
 	}
 
-	authrTokenKey := "authorizer_access_token_" + appid
+	authrTokenKey := fmt.Sprintf("%s_access_token", appid)
 	if err := ctx.Cache.Set(authrTokenKey, ret.AccessToken, time.Minute*80); err != nil {
 		return nil, err
 	}
@@ -196,7 +196,7 @@ func (ctx *Context) RefreshAuthrToken(appid, refreshToken string) (*AuthrAccessT
 
 // GetAuthrAccessToken 获取授权方AccessToken
 func (ctx *Context) GetAuthrAccessToken(appid string) (string, error) {
-	authrTokenKey := "authorizer_access_token_" + appid
+	authrTokenKey := fmt.Sprintf("%s_access_token", appid)
 	val := ctx.Cache.Get(authrTokenKey)
 	if val == nil {
 		return "", fmt.Errorf("cannot get authorizer %s access token", appid)
