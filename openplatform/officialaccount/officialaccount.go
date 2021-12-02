@@ -1,12 +1,14 @@
 package officialaccount
 
 import (
+	"fmt"
 	"github.com/Kee1997/wechat/v2/credential"
 	"github.com/Kee1997/wechat/v2/officialaccount"
 	offConfig "github.com/Kee1997/wechat/v2/officialaccount/config"
 	opContext "github.com/Kee1997/wechat/v2/openplatform/context"
 	"github.com/Kee1997/wechat/v2/openplatform/officialaccount/js"
 	"github.com/Kee1997/wechat/v2/openplatform/officialaccount/oauth"
+	"sync"
 )
 
 // OfficialAccount 代公众号实现业务
@@ -48,6 +50,7 @@ func (officialAccount *OfficialAccount) PlatformJs() *js.Js {
 type DefaultAuthrAccessToken struct {
 	opCtx *opContext.Context
 	appID string
+	accessTokenLock *sync.Mutex
 }
 
 // NewDefaultAuthrAccessToken New
@@ -60,5 +63,32 @@ func NewDefaultAuthrAccessToken(opCtx *opContext.Context, appID string) credenti
 
 // GetAccessToken 获取ak
 func (ak *DefaultAuthrAccessToken) GetAccessToken() (string, error) {
-	return ak.opCtx.GetAuthrAccessToken(ak.appID)
+	authrTokenKey := fmt.Sprintf("%s_access_token", ak.appID)
+
+	if val := ak.opCtx.Cache.Get(authrTokenKey); val != nil {
+		return val.(string), nil
+	}
+
+	// 加上lock，是为了防止在并发获取token时，cache刚好失效，导致从微信服务器上获取到不同token
+	ak.accessTokenLock.Lock()
+	defer ak.accessTokenLock.Unlock()
+
+	// 双检，防止重复从微信服务器获取
+	if val := ak.opCtx.Cache.Get(authrTokenKey); val != nil {
+		return val.(string), nil
+	}
+	// cache失效，从微信服务器获取
+
+	refreshToken := fmt.Sprintf("%s_refresh_token", ak.appID)
+
+	refreshTokenValue := ak.opCtx.Cache.Get(refreshToken)
+
+	if refreshTokenValue == nil {
+		return "", fmt.Errorf("cannot get authorizer %s access token", ak.appID)
+	}
+	token, err := ak.opCtx.RefreshAuthrToken(ak.appID, refreshTokenValue.(string))
+	if err != nil {
+		return "", err
+	}
+	return token.AccessToken, nil
 }
