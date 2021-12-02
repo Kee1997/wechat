@@ -58,6 +58,7 @@ func NewDefaultAuthrAccessToken(opCtx *opContext.Context, appID string) credenti
 	return &DefaultAuthrAccessToken{
 		opCtx: opCtx,
 		appID: appID,
+		accessTokenLock: new(sync.Mutex),
 	}
 }
 
