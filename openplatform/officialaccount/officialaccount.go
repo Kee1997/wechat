@@ -16,6 +16,10 @@ type OfficialAccount struct {
 	*officialaccount.OfficialAccount
 }
 
+func (officialAccount *OfficialAccount) SetAppID(appID string) {
+	officialAccount.appID = appID
+}
+
 // NewOfficialAccount 实例化
 // appID :为授权方公众号 APPID，非开放平台第三方平台 APPID
 func NewOfficialAccount(opCtx *opContext.Context, appID string) *OfficialAccount {
