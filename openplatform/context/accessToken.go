@@ -34,8 +34,25 @@ type ComponentAccessToken struct {
 func (ctx *Context) GetComponentAccessToken() (string, error) {
 	accessTokenCacheKey := "component_access_token"
 	val := ctx.Cache.Get(accessTokenCacheKey)
+	if val != nil {
+		return val.(string), nil
+	}
+	verifyTicket, err := ctx.GetComponentVerifyTicket()
+	if err != nil {
+		return "", err
+	}
+	componentAccessToken, err := ctx.SetComponentAccessToken(verifyTicket)
+	if err != nil {
+		return "", err
+	}
+	return componentAccessToken.AccessToken, nil
+}
+
+func (ctx *Context) GetComponentVerifyTicket() (string, error) {
+	VerifyTicketKey := "component_verify_ticket"
+	val := ctx.Cache.Get(VerifyTicketKey)
 	if val == nil {
-		return "", fmt.Errorf("cann't get component access token")
+		return "", fmt.Errorf("cann't get component verify ticket")
 	}
 	return val.(string), nil
 }

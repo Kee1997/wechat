@@ -85,7 +85,7 @@ func (ak *DefaultAuthrAccessToken) GetAccessToken() (string, error) {
 	refreshTokenValue := ak.opCtx.Cache.Get(refreshToken)
 
 	if refreshTokenValue == nil {
-		return "", fmt.Errorf("cannot get authorizer %s access token", ak.appID)
+		return "", fmt.Errorf("cannot get authorizer %s refresh token", ak.appID)
 	}
 	token, err := ak.opCtx.RefreshAuthrToken(ak.appID, refreshTokenValue.(string))
 	if err != nil {
