@@ -26,6 +26,8 @@ const (
 
 // ComponentAccessToken 第三方平台
 type ComponentAccessToken struct {
+	*util.CommonError
+
 	AccessToken string `json:"component_access_token"`
 	ExpiresIn   int64  `json:"expires_in"`
 }
