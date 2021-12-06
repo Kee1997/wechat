@@ -70,14 +70,10 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 	if err != nil {
 		return nil, err
 	}
-
 	at := &ComponentAccessToken{}
-	if err := json.Unmarshal(respBody, at); err != nil {
+	err = util.DecodeWithError(respBody, at, "SetComponentAccessToken")
+	if err != nil {
 		return nil, err
-	}
-
-	if at.AccessToken == "" {
-		return nil, fmt.Errorf("get component error, value is nil")
 	}
 
 	accessTokenCacheKey := "component_access_token"
