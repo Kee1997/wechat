@@ -32,7 +32,8 @@ type ComponentAccessToken struct {
 
 // GetComponentAccessToken 获取 ComponentAccessToken
 func (ctx *Context) GetComponentAccessToken() (string, error) {
-	accessTokenCacheKey := "component_access_token"
+	// wx5848d797fdc77fce_component_access_token
+	accessTokenCacheKey := fmt.Sprintf("%s_component_access_token", ctx.AppID)
 	val := ctx.Cache.Get(accessTokenCacheKey)
 	if val != nil {
 		return val.(string), nil
@@ -49,7 +50,8 @@ func (ctx *Context) GetComponentAccessToken() (string, error) {
 }
 
 func (ctx *Context) GetComponentVerifyTicket() (string, error) {
-	VerifyTicketKey := "component_verify_ticket"
+	// wx5848d797fdc77fce_component_verify_ticket
+	VerifyTicketKey := fmt.Sprintf("%s_component_verify_ticket", ctx.AppID)
 	val := ctx.Cache.Get(VerifyTicketKey)
 	if val == nil {
 		return "", fmt.Errorf("cann't get component verify ticket")
