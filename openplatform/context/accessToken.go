@@ -76,7 +76,7 @@ func (ctx *Context) SetComponentAccessToken(verifyTicket string) (*ComponentAcce
 		return nil, err
 	}
 
-	accessTokenCacheKey := "component_access_token"
+	accessTokenCacheKey := fmt.Sprintf("%s_component_access_token", ctx.AppID)
 	expires := at.ExpiresIn - 1500
 	if err := ctx.Cache.Set(accessTokenCacheKey, at.AccessToken, time.Duration(expires)*time.Second); err != nil {
 		return nil, nil
